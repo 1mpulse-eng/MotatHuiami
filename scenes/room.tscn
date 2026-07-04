@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://t0mgdh7o3ewn"]
+
+[ext_resource type="Texture2D" uid="uid://d04pldrb1a1ce" path="res://sprites/images (3).jpg" id="1_36trf"]
+[ext_resource type="PackedScene" uid="uid://b5vxy4sny1te3" path="res://scenes/player.tscn" id="2_85yof"]
+[ext_resource type="PackedScene" uid="uid://cl4kwfhy6ygx6" path="res://scenes/enemy.tscn" id="3_14vil"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5h11f"]
+size = Vector2(39, 38)
+
+[node name="Room" type="Node2D" unique_id=549951227]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1213378556]
+position = Vector2(0, -220)
+scale = Vector2(9.639998, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1917447480]
+position = Vector2(1.5, 1)
+shape = SubResource("RectangleShape2D_5h11f")
+
+[node name="ColorRect" type="ColorRect" parent="StaticBody2D" unique_id=1385193715]
+offset_left = -19.0
+offset_top = -19.0
+offset_right = 21.0
+offset_bottom = 21.0
+pivot_offset = Vector2(20.005, 20)
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=2009103648]
+
+[node name="Images(3)" type="Sprite2D" parent="TileMapLayer" unique_id=1943124379]
+position = Vector2(-2.5000076, -15.749989)
+scale = Vector2(1.5100671, 0.91610736)
+texture = ExtResource("1_36trf")
+
+[node name="Player" parent="." unique_id=1069597978 instance=ExtResource("2_85yof")]
+position = Vector2(0, 108)
+
+[node name="Enemy" parent="." unique_id=263500262 instance=ExtResource("3_14vil")]
+position = Vector2(-190, -64)

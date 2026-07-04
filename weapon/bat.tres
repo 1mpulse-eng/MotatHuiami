@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="WeaponResource" format=3 uid="uid://dsl43gmog2lkm"]
+
+[ext_resource type="Script" uid="uid://btr1hgk7k407y" path="res://scripts/weapon_recource.gd" id="1_nhssu"]
+
+[resource]
+script = ExtResource("1_nhssu")
+damage = 1
+attack_cooldown = 0.1
+metadata/_custom_type_script = "uid://btr1hgk7k407y"

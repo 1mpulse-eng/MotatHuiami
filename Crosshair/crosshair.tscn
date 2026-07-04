@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://bvii8f5602mts"]
+
+[ext_resource type="Texture2D" uid="uid://djof03bfwsyat" path="res://Crosshair/pixil-frame-0 (1).png" id="1_lbujc"]
+[ext_resource type="Script" uid="uid://vb0p0w77hg1" path="res://scripts/Coursor_custom.gd" id="2_wey0y"]
+
+[node name="Crosshair" type="CanvasLayer" unique_id=268354461]
+layer = 25
+
+[node name="Crosshair_image" type="TextureRect" parent="." unique_id=253537702]
+custom_minimum_size = Vector2(32, 32)
+offset_right = 32.0
+offset_bottom = 32.0
+texture = ExtResource("1_lbujc")
+script = ExtResource("2_wey0y")
