@@ -15,12 +15,18 @@ var _attack_id = 0 # guards against overlapping async attack calls
 
 # Текущее оружие как ресурс
 var current_weapon: WeaponResource = null
+var fists_weapon: WeaponResource = preload("res://weapon/fists.tres")
+
+# Оружие на полу, находящееся в радиусе подбора
+var nearby_weapons: Array[WeaponPickup] = []
 
 func _ready():
 	add_to_group("player")
 	$AttackHitbox/CollisionShape2D.disabled = true
 	$AttackHitbox.body_entered.connect(_on_hitbox_body_entered)
 	$AnimatedSprite2D.animation_finished.connect(_on_animation_finished)
+	$PickupZone.area_entered.connect(_on_pickup_zone_area_entered)
+	$PickupZone.area_exited.connect(_on_pickup_zone_area_exited)
 	# Стартовое оружие
 	equip(preload("res://weapon//bat.tres"))
 
@@ -29,6 +35,45 @@ func equip(weapon: WeaponResource):
 	# Обновляем размер и позицию хитбокса под оружие
 	$AttackHitbox/CollisionShape2D.shape.size = weapon.hitbox_size
 	$AttackHitbox.position = weapon.hitbox_offset
+
+func _on_pickup_zone_area_entered(area: Area2D):
+	if area is WeaponPickup:
+		nearby_weapons.append(area)
+
+func _on_pickup_zone_area_exited(area: Area2D):
+	if area is WeaponPickup:
+		nearby_weapons.erase(area)
+
+func _get_closest_pickup() -> WeaponPickup:
+	var closest: WeaponPickup = null
+	var closest_dist := INF
+	for w in nearby_weapons:
+		if not is_instance_valid(w):
+			continue
+		var d = global_position.distance_squared_to(w.global_position)
+		if d < closest_dist:
+			closest_dist = d
+			closest = w
+	return closest
+
+func pick_up_weapon(pickup: WeaponPickup):
+	var picked_weapon = pickup.weapon_resource
+	nearby_weapons.erase(pickup)
+	pickup.queue_free()
+	equip(picked_weapon)
+
+const THROWN_WEAPON_SCENE = preload("res://weapon/thrown_weapon.tscn")
+
+func throw_weapon():
+	if current_weapon == null or current_weapon == fists_weapon:
+		return
+	var thrown = THROWN_WEAPON_SCENE.instantiate()
+	thrown.thrower = self
+	thrown.weapon_resource = current_weapon
+	thrown.direction = (get_global_mouse_position() - global_position).normalized()
+	get_parent().add_child(thrown)
+	thrown.global_position = global_position
+	equip(fists_weapon)
 
 func _physics_process(delta):
 	var direction = Vector2.ZERO
@@ -47,6 +92,13 @@ func _physics_process(delta):
 			_start_roll(direction)
 		if Input.is_action_just_pressed("attack") and can_attack and not is_rolling:
 			_play_attack_animation()
+		if Input.is_action_just_pressed("throw") and not is_attacking and not is_rolling:
+			if current_weapon == fists_weapon:
+				var closest = _get_closest_pickup()
+				if closest:
+					pick_up_weapon(closest)
+			else:
+				throw_weapon()
 
 	move_and_slide()
 

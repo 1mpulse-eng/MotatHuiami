@@ -5,7 +5,7 @@ const REACTION_TIME = 0.3
 const PROXIMITY_REACTION_TIME = 0.8
 const ATTACK_DAMAGE = 1
 const ATTACK_COOLDOWN = 1.0
-const ATTACK_RANGE = 80.0    # дистанция при которой враг останавливается и бьёт
+const ATTACK_RANGE = 45.0    # дистанция при которой враг останавливается и бьёт (соответствует реальному радиусу AttackArea)
 
 var hp = MAX_HP
 var player = null
@@ -31,10 +31,11 @@ func _physics_process(delta):
 		var direction = (player.global_position - global_position).normalized()
 		rotation = direction.angle() + PI / 2
 
-		if distance <= ATTACK_RANGE and can_attack:
-			# Игрок близко — стоим и атакуем
+		if distance <= ATTACK_RANGE:
+			# Игрок близко — стоим, атакуем только если не на кулдауне
 			velocity = Vector2.ZERO
-			_start_attack()
+			if can_attack:
+				_start_attack()
 		elif not is_attacking:
 			# Идём к игроку
 			velocity = direction * SPEED

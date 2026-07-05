@@ -12,6 +12,7 @@ radius = 155.0516
 size = Vector2(53, 34)
 
 [node name="Enemy" type="CharacterBody2D" unique_id=263500262]
+y_sort_enabled = true
 script = ExtResource("1_7p1mj")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=654872203]

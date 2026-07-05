@@ -1,9 +1,12 @@
 [gd_resource type="Resource" script_class="WeaponResource" format=3 uid="uid://dsl43gmog2lkm"]
 
 [ext_resource type="Script" uid="uid://btr1hgk7k407y" path="res://scripts/weapon_recource.gd" id="1_nhssu"]
+[ext_resource type="Texture2D" uid="uid://be5voor5yypvt" path="res://sprites/bat.png" id="2_bat_tex"]
 
 [resource]
 script = ExtResource("1_nhssu")
 damage = 1
-attack_cooldown = 0.1
+texture = ExtResource("2_bat_tex")
+pickup_scale = 1.3
+attack_cooldown = 0.3
 metadata/_custom_type_script = "uid://btr1hgk7k407y"
