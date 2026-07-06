@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="WeaponResource" format=3]
+
+[ext_resource type="Script" uid="uid://btr1hgk7k407y" path="res://scripts/weapon_recource.gd" id="1_efw"]
+
+[resource]
+script = ExtResource("1_efw")
+weapon_name = "Кулак врага"
+damage = 1
+attack_cooldown = 1.0
+metadata/_custom_type_script = "uid://btr1hgk7k407y"

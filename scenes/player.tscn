@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://bub5t5ejjpot7" path="res://sprites/kulak.png" id="3_qlg0r"]
 [ext_resource type="Texture2D" uid="uid://42jvjg2povr8" path="res://sprites/planim2.png" id="3_tuyoq"]
 [ext_resource type="Script" uid="uid://c0tg6ek85ygp0" path="res://scripts/camera.gd" id="4_dqkch"]
+[ext_resource type="Script" uid="uid://cidvanrbvhtde" path="res://scripts/tentacle.gd" id="5_tentacle"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sweqy"]
 atlas = ExtResource("2_qlg0r")
@@ -117,6 +118,9 @@ size = Vector2(49.166664, 30)
 [sub_resource type="CircleShape2D" id="CircleShape2D_pickupzone"]
 radius = 45.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_tentaclezone"]
+radius = 132.54192
+
 [node name="Player" type="CharacterBody2D" unique_id=1069597978]
 top_level = true
 scale = Vector2(1.2, 1.2)
@@ -161,3 +165,21 @@ monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PickupZone" unique_id=736618038]
 shape = SubResource("CircleShape2D_pickupzone")
+
+[node name="Tentacle" type="Node2D" parent="." unique_id=200000001]
+position = Vector2(0, 38)
+script = ExtResource("5_tentacle")
+
+[node name="Visual" type="ColorRect" parent="Tentacle" unique_id=200000002]
+offset_left = -4.0
+offset_top = -30.0
+offset_right = 4.0
+offset_bottom = 6.0
+color = Color(0.6, 0.15, 0.55, 1)
+
+[node name="Zone" type="Area2D" parent="Tentacle" unique_id=200000003]
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Tentacle/Zone" unique_id=200000004]
+position = Vector2(0.8333333, -38.833336)
+shape = SubResource("CircleShape2D_tentaclezone")

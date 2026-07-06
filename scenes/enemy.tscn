@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cl4kwfhy6ygx6"]
 
 [ext_resource type="Script" uid="uid://biipbx1yiar2l" path="res://scripts/enemy.gd" id="1_7p1mj"]
+[ext_resource type="Resource" uid="uid://dsl43gmog2lkm" path="res://weapon/bat.tres" id="2_weapon"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7xaro"]
 size = Vector2(53.33349, 15)
@@ -14,6 +15,7 @@ size = Vector2(53, 34)
 [node name="Enemy" type="CharacterBody2D" unique_id=263500262]
 y_sort_enabled = true
 script = ExtResource("1_7p1mj")
+weapon_resource = ExtResource("2_weapon")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=654872203]
 offset_left = -16.0
@@ -44,6 +46,13 @@ polygon = PackedVector2Array(0, -0.2873563, -100.75728, -14.068089, -99.98273, -
 visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ProximityArea" unique_id=1798305448]
+shape = SubResource("CircleShape2D_5iqjx")
+
+[node name="WeaponSearchZone" type="Area2D" parent="." unique_id=300000001]
+visible = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponSearchZone" unique_id=300000002]
 shape = SubResource("CircleShape2D_5iqjx")
 
 [node name="AttackArea" type="Area2D" parent="." unique_id=712275755]

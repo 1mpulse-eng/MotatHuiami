@@ -20,6 +20,8 @@ var fists_weapon: WeaponResource = preload("res://weapon/fists.tres")
 # Оружие на полу, находящееся в радиусе подбора
 var nearby_weapons: Array[WeaponPickup] = []
 
+@onready var tentacle: Tentacle = $Tentacle
+
 func _ready():
 	add_to_group("player")
 	$AttackHitbox/CollisionShape2D.disabled = true
@@ -75,6 +77,72 @@ func throw_weapon():
 	thrown.global_position = global_position
 	equip(fists_weapon)
 
+## Единый обработчик кнопки "throw" (ПКМ). Порядок для щупальца: бросок (если вооружено) ->
+## вырывание оружия у врага под курсором -> подбор оружия с пола в своей зоне.
+## Для игрока — как раньше: кулаки -> подбор, оружие -> бросок. Если в этот же нажатие
+## бросило щупальце, игрок в этот момент НЕ бросает (сначала разряжается щупальце).
+## Единый обработчик кнопки "throw" (ПКМ). За одно нажатие срабатывает РОВНО ОДНО действие
+## (либо подбор, либо бросок, либо вырывание) — строгая цепочка приоритетов сверху вниз:
+## 1) игрок подбирает оружие в своей зоне (если в руках кулаки) — своё под ногами всегда
+##    в приоритете, иначе бросок/подбор щупальца мог бы его перебить
+## 2) щупальце бросает (если вооружено)
+## 3) вырывание оружия у врага под курсором (если щупальце пустое)
+## 4) щупальце подбирает оружие с пола, на которое наведён курсор (в своей зоне)
+## 5) игрок бросает оружие (если вооружен)
+## Возвращает строковое название действия, которое произойдёт при нажатии ПКМ прямо сейчас:
+## "player_pickup", "tentacle_pickup", "rip", "throw" или "none". Ничего не меняет в состоянии —
+## только смотрит, теми же проверками, что и _handle_throw_button(). Используется курсором
+## для подсветки (чтобы игрок видел, что сейчас случится по клику).
+func get_action_preview() -> String:
+	var mouse_pos = get_global_mouse_position()
+
+	if current_weapon == fists_weapon and _get_closest_pickup() != null:
+		return "player_pickup"
+
+	if tentacle.current_weapon != null:
+		return "throw"
+
+	if tentacle.has_rippable_enemy(mouse_pos):
+		return "rip"
+
+	var exclude_for_tentacle: Array = nearby_weapons if current_weapon == fists_weapon else []
+	if tentacle.get_closest_weapon(exclude_for_tentacle, mouse_pos) != null:
+		return "tentacle_pickup"
+
+	if current_weapon != fists_weapon:
+		return "throw"
+
+	return "none"
+
+func _handle_throw_button():
+	var mouse_pos = get_global_mouse_position()
+
+	if current_weapon == fists_weapon:
+		var closest = _get_closest_pickup()
+		if closest:
+			pick_up_weapon(closest)
+			return
+
+	if tentacle.current_weapon != null:
+		tentacle.throw_weapon(self)
+		return
+
+	if tentacle.try_rip_weapon(mouse_pos):
+		return
+
+	# Зону игрока исключаем из кандидатов щупальца только пока игрок реально может
+	# там что-то подобрать сам (т.е. держит кулаки). Если в руке уже оружие —
+	# своим подбором игрок всё равно не воспользуется, так что щупальце может забрать
+	# оружие даже из зоны игрока. На практике до этой строки редко доходит с пустыми
+	# руками (пункт 1 уже забрал бы всё из своей зоны), но exclude оставлен как страховка.
+	var exclude_for_tentacle: Array = nearby_weapons if current_weapon == fists_weapon else []
+	var tw = tentacle.get_closest_weapon(exclude_for_tentacle, mouse_pos)
+	if tw:
+		tentacle.pick_up_weapon(tw)
+		return
+
+	throw_weapon()
+
 func _physics_process(delta):
 	var direction = Vector2.ZERO
 	direction.x = Input.get_axis("ui_left", "ui_right")
@@ -91,14 +159,12 @@ func _physics_process(delta):
 		if Input.is_action_just_pressed("roll") and can_roll and not is_attacking:
 			_start_roll(direction)
 		if Input.is_action_just_pressed("attack") and can_attack and not is_rolling:
+			if current_weapon == fists_weapon and tentacle.current_weapon != null:
+				# Забираем оружие из щупальца в руки и тут же бьём им, одним нажатием
+				equip(tentacle.take_weapon())
 			_play_attack_animation()
 		if Input.is_action_just_pressed("throw") and not is_attacking and not is_rolling:
-			if current_weapon == fists_weapon:
-				var closest = _get_closest_pickup()
-				if closest:
-					pick_up_weapon(closest)
-			else:
-				throw_weapon()
+			_handle_throw_button()
 
 	move_and_slide()
 
