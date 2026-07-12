@@ -14,6 +14,10 @@ config/name="MotatHuiami"
 run/main_scene="uid://t0mgdh7o3ewn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
+[audio]
+
+buses/default_bus_layout=""
+
 [autoload]
 
 Crosshair="*uid://bvii8f5602mts"

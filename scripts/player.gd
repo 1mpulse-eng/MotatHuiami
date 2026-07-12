@@ -250,3 +250,4 @@ func take_damage(amount):
 	if is_invincible:
 		return
 	print("Получен урон: ", amount)
+	#queue_free()

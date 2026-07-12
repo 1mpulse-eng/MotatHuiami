@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://t0mgdh7o3ewn"]
 
-[ext_resource type="Texture2D" uid="uid://d04pldrb1a1ce" path="res://sprites/images (3).jpg" id="1_36trf"]
+[ext_resource type="Texture2D" uid="uid://bja1jo2csufs4" path="res://sprites/Tileable pixel art wood.jpg" id="1_jxe34"]
 [ext_resource type="PackedScene" uid="uid://b5vxy4sny1te3" path="res://scenes/player.tscn" id="2_85yof"]
 [ext_resource type="PackedScene" uid="uid://cl4kwfhy6ygx6" path="res://scenes/enemy.tscn" id="3_14vil"]
 [ext_resource type="PackedScene" uid="uid://d221iji2oodsj" path="res://weapon/weapon_pickup.tscn" id="4_pickup"]
@@ -31,8 +31,7 @@ z_index = -1
 
 [node name="Images(3)" type="Sprite2D" parent="TileMapLayer" unique_id=1943124379]
 position = Vector2(-2.5000076, -15.749989)
-scale = Vector2(1.5100671, 0.91610736)
-texture = ExtResource("1_36trf")
+texture = ExtResource("1_jxe34")
 
 [node name="Player" parent="." unique_id=1069597978 instance=ExtResource("2_85yof")]
 position = Vector2(0, 108)

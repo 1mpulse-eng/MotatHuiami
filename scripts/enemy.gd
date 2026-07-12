@@ -50,6 +50,7 @@ func disarm() -> WeaponResource:
 	var weapon = current_weapon
 	current_weapon = fists_weapon
 	_start_stagger()
+	can_see_player = true
 	return weapon
 
 func _start_stagger():

@@ -15,6 +15,15 @@ var nearby_enemies: Array[Node] = []
 
 const THROWN_WEAPON_SCENE = preload("res://weapon/thrown_weapon.tscn")
 
+@onready var visual: TentacleVisual = $TentacleVisual
+
+## Отложенный возврат щупальца в состояние покоя. Вызывается "и забывается" (без await у
+## вызывающей стороны), поэтому функции ниже (pick_up_weapon/throw_weapon/try_rip_weapon)
+## остаются полностью синхронными и продолжают возвращать значения сразу, как раньше.
+func _schedule_retract(delay: float, duration: float = 0.2):
+	await get_tree().create_timer(delay).timeout
+	visual.retract(duration)
+
 func _ready():
 	$Zone.area_entered.connect(_on_zone_area_entered)
 	$Zone.area_exited.connect(_on_zone_area_exited)
@@ -59,19 +68,28 @@ func get_closest_weapon(exclude: Array, mouse_pos: Vector2) -> WeaponPickup:
 func pick_up_weapon(pickup: WeaponPickup):
 	current_weapon = pickup.weapon_resource
 	nearby_weapons.erase(pickup)
+	visual.flash_color(TentacleVisual.COLOR_PICKUP)
+	visual.reach_to(pickup.global_position, 0.18, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	visual.set_held_weapon(current_weapon)
 	pickup.queue_free()
+	_schedule_retract(0.18)
 
 ## Бросок оружия щупальцем. thrower передаётся как игрок (владелец), чтобы не задеть самого себя.
 func throw_weapon(thrower: Node2D):
 	if current_weapon == null:
 		return
+	var mouse_pos = thrower.get_global_mouse_position()
+	visual.flash_color(TentacleVisual.COLOR_THROW)
+	visual.reach_to(mouse_pos, 0.15, Tween.TRANS_QUAD, Tween.EASE_OUT)
 	var thrown = THROWN_WEAPON_SCENE.instantiate()
 	thrown.thrower = thrower
 	thrown.weapon_resource = current_weapon
-	thrown.direction = (thrower.get_global_mouse_position() - global_position).normalized()
+	thrown.direction = (mouse_pos - global_position).normalized()
 	thrower.get_parent().add_child(thrown)
 	thrown.global_position = global_position
 	current_weapon = null
+	visual.set_held_weapon(null)
+	_schedule_retract(0.1)
 
 ## Ищет врага из nearby_enemies, находящегося ближе всего к позиции курсора (в пределах HOVER_RADIUS).
 func _get_enemy_under_mouse(mouse_pos: Vector2) -> Node:
@@ -105,14 +123,20 @@ func try_rip_weapon(mouse_pos: Vector2) -> bool:
 	var enemy = _get_enemy_under_mouse(mouse_pos)
 	if enemy == null or not enemy.has_method("disarm"):
 		return false
+	visual.flash_color(TentacleVisual.COLOR_RIP)
+	visual.reach_to(enemy.global_position, 0.1, Tween.TRANS_BACK, Tween.EASE_OUT)
 	var weapon = enemy.disarm()
 	if weapon == null:
+		visual.retract()
 		return false
 	current_weapon = weapon
+	visual.set_held_weapon(current_weapon)
+	_schedule_retract(0.1, 0.35)
 	return true
 
 ## Забирает оружие из слота щупальца (для передачи в руки игрока). Возвращает ресурс или null.
 func take_weapon() -> WeaponResource:
 	var w = current_weapon
 	current_weapon = null
+	visual.set_held_weapon(null)
 	return w

@@ -1,38 +1,42 @@
 [gd_scene format=3 uid="uid://b5vxy4sny1te3"]
 
 [ext_resource type="Script" uid="uid://bgrkbe1tlgkox" path="res://scripts/player.gd" id="1_dqkch"]
-[ext_resource type="Texture2D" uid="uid://xxfkoa32nu2b" path="res://sprites/planim.png" id="2_qlg0r"]
 [ext_resource type="Texture2D" uid="uid://bub5t5ejjpot7" path="res://sprites/kulak.png" id="3_qlg0r"]
 [ext_resource type="Texture2D" uid="uid://42jvjg2povr8" path="res://sprites/planim2.png" id="3_tuyoq"]
 [ext_resource type="Script" uid="uid://c0tg6ek85ygp0" path="res://scripts/camera.gd" id="4_dqkch"]
 [ext_resource type="Script" uid="uid://cidvanrbvhtde" path="res://scripts/tentacle.gd" id="5_tentacle"]
+[ext_resource type="Script" uid="uid://bpdnqb6vo32im" path="res://scripts/tentacle_visual.gd" id="6_tentacle_visual"]
+[ext_resource type="Texture2D" uid="uid://b3h3d4csixngr" path="res://sprites/hinge.png" id="8_y4r1p"]
+[ext_resource type="Texture2D" uid="uid://dnch2cnsvaehy" path="res://sprites/body.png" id="9_d2wvv"]
+[ext_resource type="Texture2D" uid="uid://cp5bmmpk0lvsk" path="res://sprites/tip.png" id="10_3v2ag"]
+[ext_resource type="Texture2D" uid="uid://di8g0dnt42h5o" path="res://sprites/tip_idle.png" id="10_y4r1p"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_sweqy"]
-atlas = ExtResource("2_qlg0r")
+[sub_resource type="AtlasTexture" id="AtlasTexture_y4r1p"]
+atlas = ExtResource("3_tuyoq")
 region = Rect2(0, 0, 50, 50)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_2hs0m"]
-atlas = ExtResource("2_qlg0r")
+[sub_resource type="AtlasTexture" id="AtlasTexture_d2wvv"]
+atlas = ExtResource("3_tuyoq")
 region = Rect2(50, 0, 50, 50)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_1jxqw"]
-atlas = ExtResource("2_qlg0r")
+[sub_resource type="AtlasTexture" id="AtlasTexture_3v2ag"]
+atlas = ExtResource("3_tuyoq")
 region = Rect2(100, 0, 50, 50)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_dw050"]
-atlas = ExtResource("2_qlg0r")
+[sub_resource type="AtlasTexture" id="AtlasTexture_qfm1y"]
+atlas = ExtResource("3_tuyoq")
 region = Rect2(150, 0, 50, 50)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_b26j0"]
-atlas = ExtResource("2_qlg0r")
+[sub_resource type="AtlasTexture" id="AtlasTexture_fulsm"]
+atlas = ExtResource("3_tuyoq")
 region = Rect2(200, 0, 50, 50)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_n7ghd"]
-atlas = ExtResource("2_qlg0r")
+[sub_resource type="AtlasTexture" id="AtlasTexture_4r5pv"]
+atlas = ExtResource("3_tuyoq")
 region = Rect2(250, 0, 50, 50)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_nvl01"]
-atlas = ExtResource("2_qlg0r")
+[sub_resource type="AtlasTexture" id="AtlasTexture_60mlk"]
+atlas = ExtResource("3_tuyoq")
 region = Rect2(300, 0, 50, 50)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qlg0r"]
@@ -51,7 +55,7 @@ region = Rect2(100, 0, 50, 50)
 atlas = ExtResource("3_qlg0r")
 region = Rect2(150, 0, 50, 50)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_ivps1"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_ur7pv"]
 atlas = ExtResource("3_tuyoq")
 region = Rect2(350, 0, 50, 50)
 
@@ -59,25 +63,25 @@ region = Rect2(350, 0, 50, 50)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_sweqy")
+"texture": SubResource("AtlasTexture_y4r1p")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_2hs0m")
+"texture": SubResource("AtlasTexture_d2wvv")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_1jxqw")
+"texture": SubResource("AtlasTexture_3v2ag")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_dw050")
+"texture": SubResource("AtlasTexture_qfm1y")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_b26j0")
+"texture": SubResource("AtlasTexture_fulsm")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_n7ghd")
+"texture": SubResource("AtlasTexture_4r5pv")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_nvl01")
+"texture": SubResource("AtlasTexture_60mlk")
 }],
 "loop": 0,
 "name": &"attack",
@@ -102,7 +106,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_ivps1")
+"texture": SubResource("AtlasTexture_ur7pv")
 }],
 "loop": 1,
 "name": &"idle",
@@ -118,8 +122,122 @@ size = Vector2(49.166664, 30)
 [sub_resource type="CircleShape2D" id="CircleShape2D_pickupzone"]
 radius = 45.0
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_jej6c"]
+atlas = ExtResource("10_3v2ag")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f1ej7"]
+atlas = ExtResource("10_y4r1p")
+region = Rect2(250, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i4ail"]
+atlas = ExtResource("10_y4r1p")
+region = Rect2(300, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a38lo"]
+atlas = ExtResource("10_y4r1p")
+region = Rect2(350, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4ni07"]
+atlas = ExtResource("10_y4r1p")
+region = Rect2(400, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l71n6"]
+atlas = ExtResource("10_y4r1p")
+region = Rect2(450, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ke2ow"]
+atlas = ExtResource("10_y4r1p")
+region = Rect2(500, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ujl30"]
+atlas = ExtResource("10_y4r1p")
+region = Rect2(50, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_31cv2"]
+atlas = ExtResource("10_y4r1p")
+region = Rect2(100, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pf23h"]
+atlas = ExtResource("10_y4r1p")
+region = Rect2(150, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dt7fs"]
+atlas = ExtResource("10_y4r1p")
+region = Rect2(200, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oprun"]
+atlas = ExtResource("10_3v2ag")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a8ls1"]
+atlas = ExtResource("10_3v2ag")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fjrip"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jej6c")
+}],
+"loop": 1,
+"name": &"grab",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f1ej7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i4ail")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a38lo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4ni07")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l71n6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ke2ow")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ujl30")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_31cv2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pf23h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dt7fs")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oprun")
+}],
+"loop": 1,
+"name": &"reach",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a8ls1")
+}],
+"loop": 1,
+"name": &"throw",
+"speed": 5.0
+}]
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_tentaclezone"]
-radius = 132.54192
+radius = 137.5101
 
 [node name="Player" type="CharacterBody2D" unique_id=1069597978]
 top_level = true
@@ -140,11 +258,12 @@ color = Color(1.9974261e-06, 0.62925386, 0.18063456, 1)
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=853792792]
 position = Vector2(4.166666, -10)
 rotation = -1.5723708
-scale = Vector2(1.575, 1.575)
+scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_5h11f")
 animation = &"idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=815078361]
+visible = false
 position = Vector2(-4.4703484e-07, 0.8333333)
 scale = Vector2(0.59999824, 1.32)
 shape = SubResource("RectangleShape2D_bx8n8")
@@ -157,29 +276,62 @@ script = ExtResource("4_dqkch")
 [node name="AttackHitbox" type="Area2D" parent="." unique_id=399859900]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitbox" unique_id=713782596]
+visible = false
 position = Vector2(0, -22.499998)
 shape = SubResource("RectangleShape2D_5h11f")
 
 [node name="PickupZone" type="Area2D" parent="." unique_id=141715212]
+visible = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PickupZone" unique_id=736618038]
 shape = SubResource("CircleShape2D_pickupzone")
 
 [node name="Tentacle" type="Node2D" parent="." unique_id=200000001]
-position = Vector2(0, 38)
+position = Vector2(-0.8333333, 10)
 script = ExtResource("5_tentacle")
 
-[node name="Visual" type="ColorRect" parent="Tentacle" unique_id=200000002]
-offset_left = -4.0
-offset_top = -30.0
-offset_right = 4.0
-offset_bottom = 6.0
-color = Color(0.6, 0.15, 0.55, 1)
+[node name="TentacleVisual" type="Node2D" parent="Tentacle" unique_id=200000002]
+script = ExtResource("6_tentacle_visual")
+pool_size = 30
+visual_scale = 0.475
+segment_rotation_offset = 1.55
+idle_segment_count = 8
+idle_curl_end_deg = -85.0
+idle_curl_curve = 1.613
+idle_last_segment_curl_t = 0.915
+reach_wiggle_amplitude = 0.25
+idle_jitter_amplitude = 0.1
+
+[node name="SegmentPool" type="Node2D" parent="Tentacle/TentacleVisual" unique_id=200000007]
+
+[node name="SegmentTemplate" type="Node2D" parent="Tentacle/TentacleVisual" unique_id=200000008]
+visible = false
+
+[node name="Hinge" type="Sprite2D" parent="Tentacle/TentacleVisual/SegmentTemplate" unique_id=200000009]
+z_index = -1
+scale = Vector2(0.835, 0.835)
+texture = ExtResource("8_y4r1p")
+
+[node name="Body" type="Sprite2D" parent="Tentacle/TentacleVisual/SegmentTemplate" unique_id=200000010]
+texture = ExtResource("9_d2wvv")
+
+[node name="Tip" type="AnimatedSprite2D" parent="Tentacle/TentacleVisual" unique_id=200000011]
+position = Vector2(19.985596, -27.029015)
+rotation = -0.7389936
+scale = Vector2(0.475, 0.475)
+sprite_frames = SubResource("SpriteFrames_fjrip")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.6111898
+
+[node name="WeaponSprite" type="Sprite2D" parent="Tentacle/TentacleVisual/Tip" unique_id=200000005]
+visible = false
 
 [node name="Zone" type="Area2D" parent="Tentacle" unique_id=200000003]
+visible = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tentacle/Zone" unique_id=200000004]
-position = Vector2(0.8333333, -38.833336)
+position = Vector2(0, -11.666666)
 shape = SubResource("CircleShape2D_tentaclezone")
