@@ -3,12 +3,12 @@ const SPEED = 250.0
 const MAX_HP = 1
 const REACTION_TIME = 0.3
 const PROXIMITY_REACTION_TIME = 0.8
-const ATTACK_RANGE = 45.0    # дистанция при которой враг останавливается и бьёт (соответствует реальному радиусу AttackArea)
-const WEAPON_PICKUP_RANGE = 30.0 # дистанция, на которой безоружный враг подбирает оружие с пола
+const ATTACK_RANGE = 45.0
+const WEAPON_PICKUP_RANGE = 30.0
 
-## Стартовое оружие врага — назначается в инспекторе через .tres (bat.tres и т.д.).
-## Если не задано, враг стартует безоружным (дерётся кулаками).
 @export var weapon_resource: WeaponResource = null
+## Сцена пикапа оружия — назначь в инспекторе (нужна для дропа оружия после смерти)
+@export var weapon_pickup_scene: PackedScene = null
 
 var fists_weapon: WeaponResource = preload("res://weapon/enemy_fists.tres")
 var current_weapon: WeaponResource = null
@@ -24,14 +24,13 @@ var is_attacking = false
 var is_dead = false
 var is_staggered = false
 
-# Оружие на полу в радиусе поиска (для безоружного врага)
 var nearby_pickups: Array[WeaponPickup] = []
 
 func _ready():
 	add_to_group("enemy")
 	player = get_tree().get_first_node_in_group("player")
 	$AttackArea/CollisionShape2D.disabled = true
-	$AttackArea/ColorRect.visible = false  # прячем прямоугольник по умолчанию
+	$AttackArea/ColorRect.visible = false
 	$WeaponSearchZone.area_entered.connect(_on_weapon_search_zone_area_entered)
 	$WeaponSearchZone.area_exited.connect(_on_weapon_search_zone_area_exited)
 	equip(weapon_resource if weapon_resource != null else fists_weapon)
@@ -39,11 +38,9 @@ func _ready():
 func equip(weapon: WeaponResource):
 	current_weapon = weapon
 
-## Вооружён ли враг (не голыми кулаками)
 func is_armed() -> bool:
 	return current_weapon != null and current_weapon != fists_weapon
 
-## Вызывается щупальцем игрока, чтобы вырвать оружие. Возвращает вырванное оружие или null.
 func disarm() -> WeaponResource:
 	if not is_armed():
 		return null
@@ -97,32 +94,37 @@ func _physics_process(delta):
 		return
 
 	if can_see_player and player != null:
-		# Безоружен и рядом есть оружие на полу — бежим за ним вместо боя
-		if not is_armed():
-			var pickup = _get_closest_pickup()
-			if pickup:
-				_chase_weapon(pickup)
-				move_and_slide()
-				return
+		var distance_to_player = global_position.distance_to(player.global_position)
+		var direction_to_player = (player.global_position - global_position).normalized()
 
-		var distance = global_position.distance_to(player.global_position)
-		var direction = (player.global_position - global_position).normalized()
-		rotation = direction.angle() + PI / 2
-
-		if distance <= ATTACK_RANGE:
-			# Игрок близко — стоим, атакуем только если не на кулдауне
+		# Игрок в радиусе атаки — деремся (кулаками, если безоружны),
+		# не отвлекаясь на оружие на полу. Это чинит "зависание" у пикапа.
+		if distance_to_player <= ATTACK_RANGE:
+			rotation = direction_to_player.angle() + PI / 2
 			velocity = Vector2.ZERO
 			if can_attack:
 				_start_attack()
-		elif not is_attacking:
-			# Идём к игроку
-			velocity = direction * SPEED
+			move_and_slide()
+			return
+
+		# Безоружны и рядом лежит оружие, которое не дальше игрока — бежим за ним
+		if not is_armed():
+			var pickup = _get_closest_pickup()
+			if pickup:
+				var distance_to_pickup = global_position.distance_to(pickup.global_position)
+				if distance_to_pickup <= distance_to_player:
+					_chase_weapon(pickup)
+					move_and_slide()
+					return
+
+		rotation = direction_to_player.angle() + PI / 2
+		if not is_attacking:
+			velocity = direction_to_player * SPEED
 	else:
 		velocity = Vector2.ZERO
 
 	move_and_slide()
 
-## Бежим к оружию на полу; подбираем, когда оказываемся достаточно близко.
 func _chase_weapon(pickup: WeaponPickup):
 	var direction = (pickup.global_position - global_position).normalized()
 	var distance = global_position.distance_to(pickup.global_position)
@@ -137,15 +139,12 @@ func _chase_weapon(pickup: WeaponPickup):
 func _start_attack():
 	is_attacking = true
 	can_attack = false
-	# Фиксируем оружие атаки на момент начала удара, чтобы вырывание/подбор
-	# посреди анимации не поменяли параметры уже запущенной атаки.
 	var attack_weapon = current_weapon if current_weapon != null else fists_weapon
 
 	await get_tree().create_timer(0.4).timeout
 	if is_dead:
 		return
 
-	# Показываем зону атаки
 	$AttackArea/CollisionShape2D.disabled = false
 	$AttackArea/ColorRect.visible = true
 	await get_tree().physics_frame
@@ -157,7 +156,6 @@ func _start_attack():
 	if is_dead:
 		return
 
-	# Прячем зону атаки
 	$AttackArea/CollisionShape2D.disabled = true
 	$AttackArea/ColorRect.visible = false
 	is_attacking = false
@@ -168,8 +166,6 @@ func _start_attack():
 	can_attack = true
 
 func _check_bodies_already_in_attack_area(weapon: WeaponResource):
-	# body_entered does NOT fire for a body already overlapping the area
-	# at the moment the shape is enabled, so check manually right after.
 	for body in $AttackArea.get_overlapping_bodies():
 		_on_attack_area_body_entered(body, weapon)
 
@@ -181,7 +177,6 @@ func _on_attack_area_body_entered(body, weapon: WeaponResource = null):
 			var used_weapon = weapon if weapon != null else (current_weapon if current_weapon != null else fists_weapon)
 			body.take_damage(used_weapon.damage)
 
-# --- Конус (дальнее зрение) ---
 func _on_vision_area_body_entered(body):
 	if body.is_in_group("player"):
 		if not noticed_player and not can_see_player:
@@ -192,8 +187,6 @@ func _on_vision_area_body_exited(body):
 	if body.is_in_group("player"):
 		can_see_player = false
 		noticed_player = false
-		# Player left sight but may still be in the proximity circle;
-		# re-arm proximity detection instead of leaving it stuck.
 		if player_nearby and not noticed_nearby:
 			noticed_nearby = true
 			_start_proximity_reaction()
@@ -205,7 +198,6 @@ func _start_reaction():
 	if noticed_player:
 		can_see_player = true
 
-# --- Круг (ближняя зона) ---
 func _on_proximity_area_body_entered(body):
 	if body.is_in_group("player"):
 		player_nearby = true
@@ -225,7 +217,6 @@ func _start_proximity_reaction():
 	if player_nearby:
 		can_see_player = true
 
-# --- Урон и смерть ---
 func take_damage(amount):
 	if is_dead:
 		return
@@ -241,4 +232,24 @@ func die():
 	print("Враг умер!")
 	set_physics_process(false)
 	$AttackArea/CollisionShape2D.set_deferred("disabled", true)
+	_drop_weapon()
+	FlowManager.register_kill()
 	queue_free()
+
+func _drop_weapon():
+	if not is_armed():
+		return
+	if weapon_pickup_scene == null:
+		push_warning("weapon_pickup_scene не назначен в инспекторе — оружие не будет заспавнено")
+		return
+	var pickup = weapon_pickup_scene.instantiate()
+	pickup.weapon_resource = current_weapon
+	pickup.global_position = global_position
+	# ВАЖНО: add_child откладывается через call_deferred, потому что die()
+	# вызывается из физического колбэка (player.gd _on_hitbox_body_entered),
+	# а в этот момент физический сервер ещё "flushing queries" — то есть
+	# синхронно менять monitoring/disabled у Area2D/CollisionShape2D нельзя.
+	# Если пикап сам включает что-то подобное в своём _ready(), синхронный
+	# add_child в этот момент и приводит к ошибке
+	# "Can't change this state while flushing queries".
+	get_parent().call_deferred("add_child", pickup)

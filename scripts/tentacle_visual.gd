@@ -446,7 +446,7 @@ func _set_tip_animation(anim_name: String):
 		tip.stop()
 		tip.frame = 0
 		return
-	if tip.animation != anim_name:
+	if tip.animation != anim_name or not tip.is_playing():
 		tip.play(anim_name)
 
 

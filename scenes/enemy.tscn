@@ -3,9 +3,10 @@
 [ext_resource type="Script" uid="uid://biipbx1yiar2l" path="res://scripts/enemy.gd" id="1_7p1mj"]
 [ext_resource type="Resource" uid="uid://dsl43gmog2lkm" path="res://weapon/bat.tres" id="2_weapon"]
 [ext_resource type="Texture2D" uid="uid://dghtenabdm8bn" path="res://sprites/enemy.png" id="3_4ra3w"]
+[ext_resource type="PackedScene" uid="uid://d221iji2oodsj" path="res://weapon/weapon_pickup.tscn" id="3_5uy6h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7xaro"]
-size = Vector2(53.33349, 15)
+size = Vector2(43.656105, 12.114424)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5iqjx"]
 radius = 155.0516
@@ -18,6 +19,7 @@ y_sort_enabled = true
 scale = Vector2(1.2598504, 1.2507004)
 script = ExtResource("1_7p1mj")
 weapon_resource = ExtResource("2_weapon")
+weapon_pickup_scene = ExtResource("3_5uy6h")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=654872203]
 visible = false
@@ -36,7 +38,7 @@ scale = Vector2(1.5, 1.5)
 texture = ExtResource("3_4ra3w")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=911772954]
-position = Vector2(4.7683716e-07, 7.450581e-09)
+position = Vector2(0.39687195, 0)
 scale = Vector2(0.59999824, 1.32)
 shape = SubResource("RectangleShape2D_7xaro")
 

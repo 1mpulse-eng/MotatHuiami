@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c3h3vo6qiyr6w"
-path="res://.godot/imported/tentacle_tip.png-5a98b79ef3c97bb634965c6ba4f5044e.ctex"
+uid="uid://cmjsitj08i130"
+path="res://.godot/imported/walk_left.png-0f5ec282cc26cf39ab6cfdac0b68bd67.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/tentacle_tip.png"
-dest_files=["res://.godot/imported/tentacle_tip.png-5a98b79ef3c97bb634965c6ba4f5044e.ctex"]
+source_file="res://sprites/walk_left.png"
+dest_files=["res://.godot/imported/walk_left.png-0f5ec282cc26cf39ab6cfdac0b68bd67.ctex"]
 
 [params]
 

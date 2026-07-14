@@ -1,21 +1,19 @@
-extends TextureRect
-
+extends AnimatedSprite2D
 var player: Node = null
-
 # Цвета курсора под конкретное действие. Поправь под свой вкус/арт.
 const COLOR_NONE = Color(1, 1, 1, 1)                    # обычный — ничего не произойдёт
 const COLOR_PLAYER_PICKUP = Color(0.3, 1.0, 0.35, 1)    # зелёный — игрок подберёт сам
 const COLOR_TENTACLE_PICKUP = Color(0.7, 0.2, 0.75, 1)  # фиолетовый (цвет щупальца) — подберёт оно
 const COLOR_RIP = Color(1.0, 0.15, 0.15, 1)             # красный — наведены на врага, можно вырвать оружие
-const COLOR_THROW = Color(1.0, 0.85, 0.2, 1)            # жёлтый — готовы кинуть оружие
+const COLOR_THROW = Color(1, 1, 1, 1)            # жёлтый — готовы кинуть оружие
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	centered = true
+	top_level = true # чтобы позиция курсора не зависела от родителя
 
 func _process(delta):
-	global_position = get_viewport().get_mouse_position() - size / 2
+	global_position = get_viewport().get_mouse_position()
 	_update_color()
 
 func _update_color():

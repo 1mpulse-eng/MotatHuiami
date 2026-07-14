@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xxfkoa32nu2b"
-path="res://.godot/imported/planim.png-5e4de5d7d1c1cca1efc71f640fe75503.ctex"
+uid="uid://bubtbhsr35406"
+path="res://.godot/imported/walk_top.png-8811ccd4e8f96d5a33278cf50d7efa6f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/planim.png"
-dest_files=["res://.godot/imported/planim.png-5e4de5d7d1c1cca1efc71f640fe75503.ctex"]
+source_file="res://sprites/walk_top.png"
+dest_files=["res://.godot/imported/walk_top.png-8811ccd4e8f96d5a33278cf50d7efa6f.ctex"]
 
 [params]
 

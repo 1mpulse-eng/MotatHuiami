@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dkuh8hnkbnfaa"
-path="res://.godot/imported/bbc.png-699838a13870dff353b92522fb35035e.ctex"
+uid="uid://ccdav00n2w4mk"
+path="res://.godot/imported/walk_down.png-db235c508cd927d6e489d306ca74bf35.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/bbc.png"
-dest_files=["res://.godot/imported/bbc.png-699838a13870dff353b92522fb35035e.ctex"]
+source_file="res://sprites/walk_down.png"
+dest_files=["res://.godot/imported/walk_down.png-db235c508cd927d6e489d306ca74bf35.ctex"]
 
 [params]
 
