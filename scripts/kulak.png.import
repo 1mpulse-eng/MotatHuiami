@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bubtbhsr35406"
-path="res://.godot/imported/walk_top.png-8811ccd4e8f96d5a33278cf50d7efa6f.ctex"
+uid="uid://nuxu5ppijdb7"
+path="res://.godot/imported/kulak.png-d00ed26233314d992d09d6f8fd2cf0ae.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/walk_top.png"
-dest_files=["res://.godot/imported/walk_top.png-8811ccd4e8f96d5a33278cf50d7efa6f.ctex"]
+source_file="res://scripts/kulak.png"
+dest_files=["res://.godot/imported/kulak.png-d00ed26233314d992d09d6f8fd2cf0ae.ctex"]
 
 [params]
 

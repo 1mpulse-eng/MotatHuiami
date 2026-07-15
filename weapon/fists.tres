@@ -5,8 +5,11 @@
 [resource]
 script = ExtResource("1_npwr4")
 weapon_name = "Кулак"
-attack_cooldown = 0.15
-hitbox_size = Vector2(35, 35)
-hitbox_offset = Vector2(0, -17.5)
-attack_anim = "attack_fists"
+attack_cooldown = 0.08
+hitbox_size = Vector2(35, 28)
+hitbox_offset = Vector2(0, -14)
+attack_anim = "fists_attack_1"
+idle_anim = "fists_idle_1"
+damage_delay = 0.02
+hitbox_active_time = 0.05
 metadata/_custom_type_script = "uid://btr1hgk7k407y"

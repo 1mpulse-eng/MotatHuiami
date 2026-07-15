@@ -1,8 +1,8 @@
 extends CharacterBody2D
-const SPEED = 270.0
+const SPEED = 280.0
 const ROLL_DISTANCE = 85
 const ROLL_DURATION = 0.1
-const ROLL_COOLDOWN = 0.4
+const ROLL_COOLDOWN = 0.35
 
 var is_rolling = false
 var can_roll = true
@@ -12,6 +12,13 @@ var roll_direction = Vector2.ZERO
 var is_attacking = false
 var can_attack = true
 var _attack_id = 0 # guards against overlapping async attack calls
+
+# Чередование стороны удара (как в Hotline Miami): 0 — слева-направо,
+# 1 — справа-налево. Переключается ПОСЛЕ завершения удара (см.
+# _on_animation_finished), а не при нажатии кнопки — чтобы кулдаун и
+# прерванные атаки не сбивали чередование. idle всегда доигрывает ту же
+# сторону, что и последний удар (см. _anim_name).
+var attack_side: int = 0
 
 # Процедурное "дыхание" в простое — лёгкое периодическое сжатие/растяжение
 # спрайта поверх текущей idle-анимации (см. _process). Работает одинаково для
@@ -29,6 +36,7 @@ var fists_weapon: WeaponResource = preload("res://weapon/fists.tres")
 var nearby_weapons: Array[WeaponPickup] = []
 
 @onready var tentacle: Tentacle = $Tentacle
+@onready var camera: Camera2D = $Camera
 
 func _ready():
 	add_to_group("player")
@@ -41,6 +49,14 @@ func _ready():
 	# Стартовое оружие
 	equip(preload("res://weapon//bat.tres"))
 
+## Выбирает имя анимации под текущую attack_side. Если у оружия не задан
+## alt-вариант (пустая строка в ресурсе), просто отдаёт базовую анимацию —
+## оружие без второй стороны продолжает работать как раньше.
+func _anim_name(base: String, alt: String) -> String:
+	if attack_side == 1 and alt != "":
+		return alt
+	return base
+
 func equip(weapon: WeaponResource):
 	current_weapon = weapon
 	# Обновляем размер и позицию хитбокса под оружие
@@ -51,7 +67,7 @@ func equip(weapon: WeaponResource):
 	# только после удара). is_attacking проверяем на случай, если equip()
 	# вызовут прямо посреди своей же атаки — не перебиваем attack_anim.
 	if not is_attacking:
-		$AnimatedSprite2D.play(weapon.idle_anim)
+		$AnimatedSprite2D.play(_anim_name(weapon.idle_anim, weapon.idle_anim_alt))
 
 func _on_pickup_zone_area_entered(area: Area2D):
 	if area is WeaponPickup:
@@ -255,7 +271,17 @@ func _play_attack_animation():
 	var this_attack = _attack_id
 
 	$AnimatedSprite2D.scale = _sprite_base_scale
-	$AnimatedSprite2D.play(current_weapon.attack_anim)
+	$AnimatedSprite2D.play(_anim_name(current_weapon.attack_anim, current_weapon.attack_anim_alt))
+	# Толчок камеры — в сторону САМОГО УДАРА (лево-право / право-лево),
+	# а не туда, куда целится курсор. "Право" и "лево" тут относительно
+	# текущего разворота персонажа: берём направление на курсор (forward)
+	# и поворачиваем его на 90° в одну или другую сторону в зависимости
+	# от attack_side. Если после теста толчок будет визуально в обратную
+	# сторону от реального замаха — поменяй местами PI/2 и -PI/2 ниже.
+	var facing_dir = (get_global_mouse_position() - global_position).normalized()
+	var side_dir = facing_dir.rotated(-PI / 2) if attack_side == 0 else facing_dir.rotated(PI / 2)
+	camera.punch(side_dir, 8.0)
+	camera.add_trauma(0.15)
 
 	await get_tree().create_timer(current_weapon.damage_delay).timeout
 
@@ -290,9 +316,13 @@ func _check_bodies_already_in_hitbox():
 func _on_animation_finished():
 	if current_weapon == null:
 		return
-	if $AnimatedSprite2D.animation == current_weapon.attack_anim:
+	var played_anim = $AnimatedSprite2D.animation
+	if played_anim == current_weapon.attack_anim or played_anim == current_weapon.attack_anim_alt:
 		is_attacking = false
-		$AnimatedSprite2D.play(current_weapon.idle_anim)
+		# Переключаем сторону ПОСЛЕ удара — следующий замах и текущий idle
+		# пойдут уже с другой стороны.
+		attack_side = 1 - attack_side
+		$AnimatedSprite2D.play(_anim_name(current_weapon.idle_anim, current_weapon.idle_anim_alt))
 		# Independent cooldown, decoupled from the hitbox timing above.
 		# Comes straight from the equipped weapon — change it in bat.tres.
 		await get_tree().create_timer(current_weapon.attack_cooldown).timeout
@@ -303,6 +333,7 @@ func _on_hitbox_body_entered(body):
 		return
 	if body.has_method("take_damage"):
 		body.take_damage(current_weapon.damage)
+		camera.add_trauma(0.25)
 
 func _start_roll(input_direction):
 	is_rolling = true
@@ -329,4 +360,5 @@ func take_damage(amount):
 	if is_invincible:
 		return
 	print("Получен урон: ", amount)
+	camera.add_trauma(0.5)
 	#queue_free()
