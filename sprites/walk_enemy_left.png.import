@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://nuxu5ppijdb7"
-path="res://.godot/imported/kulak.png-d00ed26233314d992d09d6f8fd2cf0ae.ctex"
+uid="uid://mdvg1tv4lfnf"
+path="res://.godot/imported/walk_enemy_left.png-f721c69cc6ad108cda385e5c6c0f1e57.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scripts/kulak.png"
-dest_files=["res://.godot/imported/kulak.png-d00ed26233314d992d09d6f8fd2cf0ae.ctex"]
+source_file="res://sprites/walk_enemy_left.png"
+dest_files=["res://.godot/imported/walk_enemy_left.png-f721c69cc6ad108cda385e5c6c0f1e57.ctex"]
 
 [params]
 

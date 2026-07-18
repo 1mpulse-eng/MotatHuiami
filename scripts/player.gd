@@ -116,6 +116,9 @@ func throw_weapon():
 	get_parent().add_child(thrown)
 	thrown.global_position = global_position
 	equip(fists_weapon)
+	# Та же лёгкая отдача, что и у броска щупальцем — для консистентности,
+	# оба способа бросить оружие должны ощущаться одинаково.
+	camera.punch(thrown.direction, 8.0)
 
 ## Единый обработчик кнопки "throw" (ПКМ). Порядок для щупальца: бросок (если вооружено) ->
 ## вырывание оружия у врага под курсором -> подбор оружия с пола в своей зоне.
@@ -167,9 +170,19 @@ func _handle_throw_button():
 
 	if tentacle.current_weapon != null:
 		tentacle.throw_weapon(self)
+		# Отдача от броска — слабее, чем ближний удар: это дальнобойное
+		# действие, а не столкновение, толчок скорее лёгкий акцент.
+		camera.punch((mouse_pos - global_position).normalized(), 8.0)
 		return
 
 	if tentacle.try_rip_weapon(mouse_pos):
+		# Вырывание оружия у врага — самое "сочное" действие щупальца в игре
+		# такого рода, заслуживает реакции заметнее обычного удара кулаком:
+		# punch в сторону врага + trauma + небольшой zoom-punch на контрасте.
+		var rip_dir = (mouse_pos - global_position).normalized()
+		camera.punch(rip_dir, 20.0)
+		camera.add_trauma(0.3)
+		camera.punch_zoom(0.05)
 		return
 
 	# Зону игрока исключаем из кандидатов щупальца только пока игрок реально может
@@ -280,7 +293,7 @@ func _play_attack_animation():
 	# сторону от реального замаха — поменяй местами PI/2 и -PI/2 ниже.
 	var facing_dir = (get_global_mouse_position() - global_position).normalized()
 	var side_dir = facing_dir.rotated(-PI / 2) if attack_side == 0 else facing_dir.rotated(PI / 2)
-	camera.punch(side_dir, 8.0)
+	camera.punch(side_dir, 16.0)
 	camera.add_trauma(0.15)
 
 	await get_tree().create_timer(current_weapon.damage_delay).timeout
@@ -334,6 +347,14 @@ func _on_hitbox_body_entered(body):
 	if body.has_method("take_damage"):
 		body.take_damage(current_weapon.damage)
 		camera.add_trauma(0.25)
+		# Короткий хит-стоп на попадание — 25-35мс почти полной заморозки уже
+		# ощутимо добавляет "вес" удару, даже без всяких дополнительных
+		# эффектов. Небольшой zoom-punch поверх — ещё немного акцента.
+		# Когда появится сигнал "враг убит" — стоит вызывать hit_stop() с
+		# бОльшей длительностью (60-100мс) и bigger zoom-punch именно оттуда,
+		# а это (0.03/0.05) оставить как базовый "просто попал" отклик.
+		camera.hit_stop(0.03, 0.05)
+		camera.punch_zoom(0.04)
 
 func _start_roll(input_direction):
 	is_rolling = true
@@ -346,6 +367,11 @@ func _start_roll(input_direction):
 	else:
 		var to_mouse = (get_global_mouse_position() - global_position).normalized()
 		roll_direction = -to_mouse
+
+	# Лёгкий толчок камеры по направлению рывка + небольшое отдаление (zoom-out),
+	# чтобы дэш ощущался быстрее, без физической тряски.
+	camera.punch(roll_direction, 12.0)
+	camera.punch_zoom(-0.03)
 
 	modulate.a = 0.5
 	await get_tree().create_timer(ROLL_DURATION).timeout
@@ -361,4 +387,9 @@ func take_damage(amount):
 		return
 	print("Получен урон: ", amount)
 	camera.add_trauma(0.5)
+	# Сознательно НЕ вызываем camera.hit_stop() здесь: Engine.time_scale
+	# заморозит игру целиком, в том числе окно на реакцию/roll игрока прямо
+	# в момент, когда он и так под угрозой — а именно этого хочется избегать.
+	# Trauma (тряска) как отклик на получение урона достаточно и не мешает
+	# среагировать.
 	#queue_free()

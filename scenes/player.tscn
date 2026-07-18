@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://d0tde87tirk2i" path="res://sprites/attack_bat_2.png" id="5_f1ej7"]
 [ext_resource type="Script" uid="uid://cidvanrbvhtde" path="res://scripts/tentacle.gd" id="5_tentacle"]
 [ext_resource type="Script" uid="uid://bpdnqb6vo32im" path="res://scripts/tentacle_visual.gd" id="6_tentacle_visual"]
+[ext_resource type="Texture2D" uid="uid://bwuaonqay6lqj" path="res://sprites/kulak_2.png" id="7_oprun"]
 [ext_resource type="Texture2D" uid="uid://cg3518evw4v7p" path="res://sprites/fists_idle.png" id="8_oprun"]
 [ext_resource type="Texture2D" uid="uid://b3h3d4csixngr" path="res://sprites/hinge.png" id="8_y4r1p"]
 [ext_resource type="Texture2D" uid="uid://dnch2cnsvaehy" path="res://sprites/body.png" id="9_d2wvv"]
@@ -618,6 +619,38 @@ region = Rect2(300, 0, 50, 50)
 atlas = ExtResource("3_qlg0r")
 region = Rect2(350, 0, 50, 50)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_oxcmq"]
+atlas = ExtResource("7_oprun")
+region = Rect2(0, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wylla"]
+atlas = ExtResource("7_oprun")
+region = Rect2(50, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a3eqm"]
+atlas = ExtResource("7_oprun")
+region = Rect2(100, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_plx2b"]
+atlas = ExtResource("7_oprun")
+region = Rect2(150, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3capk"]
+atlas = ExtResource("7_oprun")
+region = Rect2(200, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kg5hq"]
+atlas = ExtResource("7_oprun")
+region = Rect2(250, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kp0if"]
+atlas = ExtResource("7_oprun")
+region = Rect2(300, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2xkbm"]
+atlas = ExtResource("7_oprun")
+region = Rect2(350, 0, 50, 50)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_wnwbv"]
 atlas = ExtResource("8_oprun")
 region = Rect2(0, 0, 50, 50)
@@ -735,6 +768,35 @@ animations = [{
 }],
 "loop": 0,
 "name": &"fists_attack_1",
+"speed": 28.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oxcmq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wylla")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a3eqm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_plx2b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3capk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kg5hq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kp0if")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2xkbm")
+}],
+"loop": 0,
+"name": &"fists_attack_2",
 "speed": 28.0
 }, {
 "frames": [{
@@ -889,16 +951,17 @@ top_level = true
 scale = Vector2(1.2, 1.2)
 motion_mode = 1
 script = ExtResource("1_dqkch")
-metadata/_edit_vertical_guides_ = [-487.0]
+metadata/_edit_vertical_guides_ = [-345.0]
 
 [node name="Legs" type="AnimatedSprite2D" parent="." unique_id=1754678149]
+position = Vector2(0, 0.83333343)
 scale = Vector2(1.2, 1.2)
 sprite_frames = SubResource("SpriteFrames_bx8n8")
-animation = &"walk_down"
+animation = &"walk_up"
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=853792792]
 position = Vector2(4.166666, -10)
-rotation = -1.5723708
+rotation = -1.5707964
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_5h11f")
 animation = &"fists_idle_1"
@@ -959,13 +1022,13 @@ texture = ExtResource("8_y4r1p")
 texture = ExtResource("9_d2wvv")
 
 [node name="Tip" type="AnimatedSprite2D" parent="Tentacle/TentacleVisual" unique_id=200000011]
-position = Vector2(20.069237, -26.695492)
-rotation = -0.76128453
+position = Vector2(20.83475, -27.253902)
+rotation = -0.6881427
 scale = Vector2(0.475, 0.475)
 sprite_frames = SubResource("SpriteFrames_fjrip")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.18377548
+frame_progress = 0.85488737
 
 [node name="WeaponSprite" type="Sprite2D" parent="Tentacle/TentacleVisual/Tip" unique_id=200000005]
 visible = false

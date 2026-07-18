@@ -30,6 +30,7 @@ pivot_offset = Vector2(20.005, 20)
 z_index = -1
 
 [node name="Images(3)" type="Sprite2D" parent="TileMapLayer" unique_id=1943124379]
+texture_filter = 5
 position = Vector2(-2.5000076, -15.749989)
 texture = ExtResource("1_jxe34")
 
@@ -38,6 +39,14 @@ position = Vector2(0, 108)
 
 [node name="Enemy" parent="." unique_id=263500262 instance=ExtResource("3_14vil")]
 position = Vector2(-190, -64)
+
+[node name="Enemy3" parent="." unique_id=379876281 instance=ExtResource("3_14vil")]
+position = Vector2(-326, -7.999996)
+rotation = -0.49257794
+scale = Vector2(1.2598504, 1.2507005)
+
+[node name="Enemy2" parent="." unique_id=1067669512 instance=ExtResource("3_14vil")]
+position = Vector2(309, -265)
 
 [node name="WeaponPickup" parent="." unique_id=1686060307 instance=ExtResource("4_pickup")]
 position = Vector2(100, 60)
